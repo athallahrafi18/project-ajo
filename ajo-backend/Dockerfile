@@ -9,6 +9,7 @@ RUN apt-get update && apt-get install -y \
     libzip-dev \
     libpng-dev \
     libjpeg-dev \
+    libgd-dev \
     libfreetype6-dev \
     && docker-php-ext-install pdo_mysql zip mbstring
 
