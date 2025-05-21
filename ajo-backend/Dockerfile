@@ -31,9 +31,11 @@ RUN chown -R www-data:www-data /var/www/html/storage /var/www/html/bootstrap/cac
 RUN a2enmod rewrite
 
 # Konfigurasi Apache untuk Laravel
-RUN echo '<Directory /var/www/html/public>\n\
-    AllowOverride All\n\
-</Directory>' >> /etc/apache2/apache2.conf
+RUN sed -i 's|DocumentRoot /var/www/html|DocumentRoot /var/www/html/public|' /etc/apache2/sites-available/000-default.conf \
+    && echo '<Directory /var/www/html/public>\n\
+        AllowOverride All\n\
+        Require all granted\n\
+    </Directory>' >> /etc/apache2/apache2.conf
 
 # Expose port 80
 EXPOSE 80
