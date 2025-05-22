@@ -9,7 +9,7 @@ const Home = lazy(() => import("../pages/Home"));
 const Menu = lazy(() => import("../pages/Menu"));
 const Cart = lazy(() => import("../pages/Cart"));
 const Checkout = lazy(() => import("../pages/Checkout"));
-const Profile = lazy(() => import("../pages/Profile"));
+// const Profile = lazy(() => import("../pages/Profile"));
 const Login = lazy(() => import("../pages/Login"));
 const Payment = lazy(() => import("../pages/Payment"));
 
@@ -32,7 +32,7 @@ const CustomerRoutes = () => {
                   <Route path="/menu" element={<Menu />} />
                   <Route path="/cart" element={<Cart />} />
                   <Route path="/checkout" element={<Checkout />} />
-                  <Route path="/profile" element={<Profile />} />
+                  {/* <Route path="/profile" element={<Profile />} /> */}
                   <Route path="/payment" element={<Payment />} />
                 </Routes>
               </main>
