@@ -2,7 +2,7 @@ import axios from "axios";
 
 // Buat instance axios dengan konfigurasi default
 const api = axios.create({
-  baseURL: "https://oomilezato.vercel.app/api", // Ganti sesuai URL backend Anda
+  baseURL: "https://project-ajo-production.up.railway.app/api", // Ganti sesuai URL backend Anda
   headers: {
     "Content-Type": "application/json",
   },
