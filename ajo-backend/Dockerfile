@@ -40,6 +40,4 @@ RUN sed -i 's|DocumentRoot /var/www/html|DocumentRoot /var/www/html/public|' /et
 # Expose port 80
 EXPOSE 80
 
-RUN php artisan migrate --force
-
 CMD ["apache2-foreground"]
