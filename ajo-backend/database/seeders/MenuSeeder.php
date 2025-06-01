@@ -27,13 +27,26 @@ class MenuSeeder extends Seeder
         // Baris ke-3 (index 2): nama tenant/kategori utama
         $categoryNames = $rows[2];
 
+        // 1. Kumpulkan nama-nama menu BEST SELLER (kolom 12/index 12)
+        $bestSellerNames = [];
+        for ($i = 3; $i < count($rows); $i++) {
+            $cell = isset($rows[$i][12]) ? trim($rows[$i][12]) : null;
+            if (!empty($cell)) {
+                $cleanName = trim(preg_replace('/\s*\(.*?\)/', '', $cell));
+                $bestSellerNames[] = $cleanName;
+                $bestSellerNames[] = $cell; // Simpan juga original (ada varian/harga)
+            }
+        }
+        $bestSellerNames = array_filter(array_unique($bestSellerNames));
+
         // Simpan sub-kategori aktif per kolom
         $currentSubCategory = [];
 
+        // 2. Proses menu dari semua tenant/kategori, kolom 1–11 saja!
         for ($i = 3; $i < count($rows); $i++) {
             $row = $rows[$i];
 
-            for ($j = 1; $j < count($row); $j++) {
+            for ($j = 1; $j < 12; $j++) { // <--- Hanya sampai kolom 11 (index 11)!
                 $cell = isset($row[$j]) ? trim($row[$j]) : null;
 
                 if (empty($cell)) continue;
@@ -61,6 +74,9 @@ class MenuSeeder extends Seeder
                 // Gunakan sub-kategori jika ada
                 $usedCategory = $currentSubCategory[$j] ?? $mainCategory;
 
+                // Bersihkan nama untuk best seller check
+                $cleanMenuName = trim(preg_replace('/\s*\(.*?\)/', '', $cell));
+
                 // Handle format: "NAMA HOT (10K) ICE (12K)"
                 if (preg_match_all('/(HOT|ICE)\s*\((\d+)[kK]\)/', $cell, $matches, PREG_SET_ORDER)) {
                     foreach ($matches as $match) {
@@ -70,14 +86,19 @@ class MenuSeeder extends Seeder
                         // Hilangkan semua (XXX) agar tidak dobel
                         $baseName = trim(preg_replace('/\s*\(.*?\)/', '', $cell));
                         $baseName = preg_replace('/\s*HOT.*$/i', '', $baseName); // buang trailing
+                        $fullMenuName = trim($baseName . ' ' . $variant);
+
+                        // Cek ke best seller
+                        $isBestSeller = in_array($fullMenuName, $bestSellerNames) || in_array($baseName, $bestSellerNames) || in_array($cleanMenuName, $bestSellerNames);
 
                         Menu::create([
-                            'name' => trim($baseName . ' ' . $variant),
+                            'name' => $fullMenuName,
                             'description' => '',
                             'category_id' => $usedCategory->id,
                             'price' => $price,
                             'status' => 'In Stock',
                             'image' => null,
+                            'is_best_seller' => $isBestSeller,
                         ]);
                     }
                 }
@@ -85,6 +106,7 @@ class MenuSeeder extends Seeder
                 elseif (preg_match('/^(.*)\((\d+)[kK]\)$/', $cell, $match)) {
                     $name = trim($match[1]);
                     $price = (int)$match[2] * 1000;
+                    $isBestSeller = in_array($name, $bestSellerNames) || in_array($cleanMenuName, $bestSellerNames);
 
                     Menu::create([
                         'name' => $name,
@@ -93,10 +115,13 @@ class MenuSeeder extends Seeder
                         'price' => $price,
                         'status' => 'In Stock',
                         'image' => null,
+                        'is_best_seller' => $isBestSeller,
                     ]);
                 }
                 // Jika tidak ada harga, default ke 0
                 else {
+                    $isBestSeller = in_array($cell, $bestSellerNames) || in_array($cleanMenuName, $bestSellerNames);
+
                     Menu::create([
                         'name' => $cell,
                         'description' => '',
@@ -104,6 +129,7 @@ class MenuSeeder extends Seeder
                         'price' => 0,
                         'status' => 'In Stock',
                         'image' => null,
+                        'is_best_seller' => $isBestSeller,
                     ]);
                 }
             }

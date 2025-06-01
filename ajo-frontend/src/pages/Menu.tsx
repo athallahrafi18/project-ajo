@@ -7,6 +7,8 @@ import { setMenuItems } from '../store/slices/menuSlice';
 import { fetchMenus } from '../api';
 import { Product } from '../types/index';
 
+const BEST_SELLER_LABEL = "BEST SELLER"; // <--- Tambah konstanta ini
+
 const Menu = () => {
   const dispatch = useDispatch();
   const [selectedParentCategory, setSelectedParentCategory] = useState<string>('All');
@@ -26,12 +28,17 @@ const Menu = () => {
 
   const rawCategories = menuData.map(item => item.category);
 
+  // Parent Categories, tanpa duplikat
   const parentCategories = Array.from(
     new Set(
       rawCategories.map(cat => cat.parent?.name ?? cat.name)
     )
   );
 
+  // Sisipkan Best Seller SETELAH 'All'
+  const displayedParentCategories = [BEST_SELLER_LABEL, ...parentCategories.filter(cat => cat !== BEST_SELLER_LABEL)];
+
+  // Subcategories, normal
   const subCategories = Array.from(
     new Set(
       rawCategories
@@ -43,9 +50,17 @@ const Menu = () => {
     )
   );
 
+  // Filtered Menu Items
   const filteredItems = menuData.filter(item => {
     const catName = item.category?.name;
     const parentName = item.category?.parent?.name ?? catName;
+
+    // Logika untuk Best Seller
+    if (selectedParentCategory === BEST_SELLER_LABEL) {
+      return item.is_best_seller &&
+        (item.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        item.description.toLowerCase().includes(searchQuery.toLowerCase()));
+    }
 
     const matchesParent = selectedParentCategory === 'All' || parentName === selectedParentCategory;
     const matchesSub = selectedSubCategory === 'All' || catName === selectedSubCategory;
@@ -81,6 +96,7 @@ const Menu = () => {
 
       {/* Parent Categories */}
       <div className="flex flex-wrap justify-center gap-2 mb-4">
+        {/* Tab All */}
         <button
           onClick={() => {
             setSelectedParentCategory('All');
@@ -95,7 +111,8 @@ const Menu = () => {
           All
         </button>
 
-        {parentCategories.map(parent => (
+        {/* Tab Best Seller & Parent Categories */}
+        {displayedParentCategories.map(parent => (
           <button
             key={parent}
             onClick={() => {
@@ -113,8 +130,8 @@ const Menu = () => {
         ))}
       </div>
 
-      {/* Subcategories */}
-      {selectedParentCategory !== 'All' && subCategories.length > 0 && (
+      {/* Subcategories, HANYA tampil kalau BUKAN Best Seller */}
+      {selectedParentCategory !== 'All' && selectedParentCategory !== BEST_SELLER_LABEL && subCategories.length > 0 && (
         <div className="flex flex-wrap justify-center gap-2 mb-8">
           <button
             onClick={() => setSelectedSubCategory('All')}
@@ -154,7 +171,10 @@ const Menu = () => {
             )}
 
             <div className={`${item.status === 'Out of Stock' ? 'opacity-40 pointer-events-none' : ''}`}>
-              <MenuCard item={item} />
+              <MenuCard
+                item={item}
+                showBestSellerBadge={item.is_best_seller && selectedParentCategory !== BEST_SELLER_LABEL}
+              />
             </div>
           </div>
         ))}

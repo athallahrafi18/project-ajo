@@ -52,7 +52,7 @@ const Home = () => {
             transition={{ delay: 0.2 }}
             className="text-xl text-white mb-8"
           >
-            Your perfect coffee experience awaits
+            lezatnya oomi, bahagianya hati
           </motion.p>
           <motion.div
             initial={{ opacity: 0, y: 20 }}
@@ -142,7 +142,7 @@ const Home = () => {
                 <p className="text-secondary-600 mb-4">
                   "Amazing coffee and atmosphere! The staff is incredibly friendly and knowledgeable. This has become my go-to spot for both work and relaxation."
                 </p>
-                <div className="font-medium text-secondary-900">- Ajo Kalempong</div>
+                <div className="font-medium text-secondary-900">- Rafif Asshiddiqie Hazahirin</div>
               </motion.div>
             ))}
           </div>
@@ -203,7 +203,7 @@ const Home = () => {
                 <h3 className="text-xl font-semibold text-secondary-900 mb-4">Business Hours</h3>
                 <div className="flex items-center text-secondary-600">
                   <Clock className="h-5 w-5 mr-2" />
-                  <span>Mon-Fri: 7am - 8pm<br />Sat-Sun: 8am - 9pm</span>
+                  <span>Mon-Sun: 10am - 12pm</span>
                 </div>
               </div>
 
@@ -219,7 +219,7 @@ const Home = () => {
                 <h3 className="text-xl font-semibold text-secondary-900 mb-4">Contact</h3>
                 <div className="flex items-center text-secondary-600">
                   <Phone className="h-5 w-5 mr-2" />
-                  <span>(555) 123-4567</span>
+                  <span>081268356935</span>
                 </div>
               </div>
 

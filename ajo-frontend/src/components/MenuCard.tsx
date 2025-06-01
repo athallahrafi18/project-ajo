@@ -7,9 +7,10 @@ import { formatRupiah } from '../utils/formatCurrency';
 
 interface MenuCardProps {
   item: Product;
+  showBestSellerBadge?: boolean; // Tambahkan prop ini
 }
 
-const MenuCard: React.FC<MenuCardProps> = ({ item }) => {
+const MenuCard: React.FC<MenuCardProps> = ({ item, showBestSellerBadge = false }) => {
   const dispatch = useDispatch();
 
   const handleAddToCart = () => {
@@ -23,6 +24,12 @@ const MenuCard: React.FC<MenuCardProps> = ({ item }) => {
       className="bg-white rounded-lg shadow-md overflow-hidden"
     >
       <div className="relative h-48">
+        {/* BADGE BEST SELLER */}
+        {showBestSellerBadge && (
+          <span className="absolute top-2 right-2 z-10 bg-blue-600 text-white text-xs font-bold px-3 py-1 rounded-full shadow">
+            Best Seller
+          </span>
+        )}
         <img
           src={item.image}
           alt={item.name}

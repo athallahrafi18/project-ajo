@@ -15,6 +15,8 @@ export interface Product {
     } | null;
   };
 
+  is_best_seller: boolean;
+
   customization?: {
     options: CustomizationOption[];
   };

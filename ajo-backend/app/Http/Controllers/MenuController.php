@@ -22,6 +22,7 @@ class MenuController extends Controller
                 'price' => $menu->price,
                 'status' => $menu->status,
                 'image' => $menu->image,
+                'is_best_seller' => $menu->is_best_seller,
                 'category' => [
                     'id' => $menu->category?->id,
                     'name' => $menu->category?->name,
@@ -50,6 +51,7 @@ class MenuController extends Controller
             'price' => $menu->price,
             'status' => $menu->status,
             'image' => $menu->image,
+            'is_best_seller' => $menu->is_best_seller,
             'category' => $menu->category?->name ?? 'Unknown',
         ]);
     }
@@ -66,6 +68,7 @@ class MenuController extends Controller
             'category_id' => 'required|exists:categories,id',
             'status' => 'required|in:In Stock,Out of Stock',
             'image' => 'nullable|string',
+            'is_best_seller' => 'nullable|boolean',
         ]);
 
         $menu = Menu::create($validated);
@@ -92,6 +95,7 @@ class MenuController extends Controller
             'category_id' => 'sometimes|required|exists:categories,id',
             'status' => 'sometimes|required|in:In Stock,Out of Stock',
             'image' => 'nullable|string',
+            'is_best_seller' => 'nullable|boolean',
         ]);
 
         $menu->update($validated);

@@ -21,7 +21,12 @@ const menuSlice = createSlice({
   reducers: {
     setMenuItems: (state, action: PayloadAction<Product[]>) => {
       state.items = action.payload;
-      state.categories = Array.from(new Set(action.payload.map(item => item.category)));
+      // Simpan parent category names unik untuk kebutuhan lain (opsional)
+      state.categories = Array.from(
+        new Set(
+          action.payload.map(item => item.category?.parent?.name ?? item.category?.name)
+        )
+      );
     },
     setLoading: (state, action: PayloadAction<boolean>) => {
       state.loading = action.payload;

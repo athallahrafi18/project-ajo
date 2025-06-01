@@ -19,6 +19,7 @@ return new class extends Migration
             $table->bigInteger('price');
             $table->string('status')->default('In Stock');
             $table->string('image')->nullable();
+            $table->boolean('is_best_seller')->default(false);
             $table->timestamps();
         });
     }
